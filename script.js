@@ -17,6 +17,7 @@ const enemies = []
 const enemyPositions = []
 let enemiesInterval = 600
 let frame = 0
+let gameOver = false
 
 //mouse (hovering over)
 const mouse = {
@@ -59,7 +60,7 @@ class Cell { //blueprint
 }
 
 const createGrid = () => {
-    for(let y = cellSize; y < canvas.height; y+= cellSize){ //each time it runs it will change row (vertical values)
+    for(let y = cellSize; y < canvas.height; y += cellSize){ //each time it runs it will change row (vertical values)
         for(let x=0; x < canvas.width; x += cellSize){ //assigning horizontal values 
             gameGrid.push(new Cell(x, y)) //creates new cell from class constructor 
         }
@@ -91,7 +92,7 @@ class Defender {
         ctx.fillStyle = 'blue'
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'gold'
-        ctx.font = '30px Arial' 
+        ctx.font = '30px Blade Runner Movie Font' 
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30) //display health meter 
     }
 }
@@ -125,7 +126,7 @@ class Enemy {
         this.y = verticalPosition
         this.width = cellSize
         this.height = cellSize
-        this.speed = Math.random() * 0.2 + 0.4 //random number between 0.4 & 0.6 
+        this.speed = Math.random() * 0.2 + 12 //random number between 0.4 & 0.6 
         this.movement = this.speed //speed of enemies will change to 0 when colliding with defenders then move again if they defeat defenders 
         this.health = 100
         this.maxHealth = this.health //upon death enemies will reward recources depending on their max health 
@@ -137,7 +138,7 @@ class Enemy {
         ctx.fillStyle = 'red' //drawing enemies 
         ctx.fillRect(this.x, this.y, this.width, this.height) 
         ctx.fillStyle = 'black' 
-        ctx.font = '30px Arial' 
+        ctx.font = '30px Blade Runner Movie Font' 
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30) //display health meter 
     }
 }
@@ -146,6 +147,9 @@ const handleEnemies = () => {
     for(let i=0; i < enemies.length; i++){
         enemies[i].update()
         enemies[i].draw()
+        if(enemies[i].x < 0){
+            gameOver = true //game will freeze and display game over message 
+        }
     }
     if(frame % enemiesInterval === 0){
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize
@@ -159,21 +163,25 @@ const handleEnemies = () => {
 // utilities 
 const handleGameStatus = () => {
     ctx.fillStyle = 'gold'
-    ctx.font = '30px Arial'
+    ctx.font = '30px Blade Runner Movie Font'
     ctx.fillText('Resources: ' + numberResources, 20, 55)
+    if(gameOver){
+        ctx.fillStyle = 'black'
+        ctx.font = '60px Blade Runner Movie Font'
+        ctx.fillText = ('GAME OVER!', 135, 330) 
+    }
 }
 
 const animate = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = 'blue'
-    ctx.fillRect(0, 0, controlsBar.width, controlsBar.height) 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
     handleGameGrid();
     handleDefenders();
     handleEnemies();
     handleGameStatus();
-    ctx.fillText('Resources: ' + numberResources, 20, 55)
-    frame++
-    requestAnimationFrame(animate) //creates an animation loop (recursion) 
+    frame++;
+    if(!gameOver) requestAnimationFrame(animate); //creates an animation loop (recursion) 
 }
 animate(); 
 
