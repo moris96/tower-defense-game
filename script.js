@@ -13,6 +13,10 @@ const cellGap = 3 //3x3 px
 const gameGrid = [] 
 const defenders = []
 let numberResources = 300
+const enemies = []
+const enemyPositions = []
+let enemiesInterval = 600
+let frame = 0
 
 //mouse (hovering over)
 const mouse = {
@@ -115,6 +119,42 @@ handleDefenders(); //will keep this for now
 
 // heroes 
 // enemies 
+class Enemy {
+    constructor(verticalPosition){
+        this.x = canvas.width //each enemy will spawn just behind right edge of canvas 
+        this.y = verticalPosition
+        this.width = cellSize
+        this.height = cellSize
+        this.speed = Math.random() * 0.2 + 0.4 //random number between 0.4 & 0.6 
+        this.movement = this.speed //speed of enemies will change to 0 when colliding with defenders then move again if they defeat defenders 
+        this.health = 100
+        this.maxHealth = this.health //upon death enemies will reward recources depending on their max health 
+    }
+    update(){
+        this.x -= this.movement //enemies walk to the left 
+    }
+    draw(){
+        ctx.fillStyle = 'red' //drawing enemies 
+        ctx.fillRect(this.x, this.y, this.width, this.height) 
+        ctx.fillStyle = 'black' 
+        ctx.font = '30px Arial' 
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30) //display health meter 
+    }
+}
+
+const handleEnemies = () => {
+    for(let i=0; i < enemies.length; i++){
+        enemies[i].update()
+        enemies[i].draw()
+    }
+    if(frame % enemiesInterval === 0){
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize
+        enemies.push(new Enemy(verticalPosition))
+        enemyPositions.push(verticalPosition) //every 600 frames a new enemy will spawn and store in verticlePosition array 
+        if(enemiesInterval > 120) enemiesInterval -= 50 //affects game difficulty in big ways! 
+    }
+}
+
 // resources 
 // utilities 
 const handleGameStatus = () => {
@@ -129,7 +169,10 @@ const animate = () => {
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height) 
     handleGameGrid();
     handleDefenders();
+    handleEnemies();
     handleGameStatus();
+    ctx.fillText('Resources: ' + numberResources, 20, 55)
+    frame++
     requestAnimationFrame(animate) //creates an animation loop (recursion) 
 }
 animate(); 
