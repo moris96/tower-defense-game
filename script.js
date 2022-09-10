@@ -181,7 +181,7 @@ const animate = () => {
     handleEnemies();
     handleGameStatus();
     frame++;
-    if(!gameOver) requestAnimationFrame(animate); //creates an animation loop (recursion) 
+    if(!gameOver) requestAnimationFrame(animate); //creates an animation loop (recursion) need to fix this later!
 }
 animate(); 
 
