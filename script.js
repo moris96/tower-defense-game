@@ -107,7 +107,7 @@ const handleDefenders = () => { //cycles through all elements in defenders array
         defenders[i].draw();
     }
 }
-
+handleDefenders(); //will keep this for now 
 
 
 // heroes 
