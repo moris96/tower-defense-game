@@ -11,6 +11,8 @@ canvas.height = 600
 const cellSize = 100 //100px
 const cellGap = 3 //3x3 px 
 const gameGrid = [] 
+const defenders = []
+let numberResources = 300
 
 //mouse (hovering over)
 const mouse = {
@@ -59,17 +61,53 @@ const createGrid = () => {
         }
     } 
 }
-createGrid() 
+createGrid();
 const handleGameGrid = () => {
     for(let i=0; i < gameGrid.length; i++){ //cycle through all the elements in game grid array 
         gameGrid[i].draw()
     }
 }
-createGrid() 
 // console.log(gameGrid)
 
 // projectiles 
 // defenders 
+class Defender {
+    constructor(x, y){
+        this.x = x
+        this.y = y 
+        this.width = cellSize
+        this.height = cellSize
+        this.shooting = false //defenders only shoot when they detect enemies 
+        this.health = 100 //defenders loose health when colliding with enemies 
+        this.projectiles = []
+        this.timer = 0 
+    }
+    draw(){
+        ctx.fillStyle = 'blue'
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.fillStyle = 'gold'
+        ctx.font = '20px Arial' 
+        ctx.fillText(Math.floor(this.health), this.x, this.y)
+    }
+}
+canvas.addEventListener('click', () => {
+    const gridPositionX = mouse.x - (mouse.x % cellSize) //250-50 (value of closest horizontal grid position to the left)
+    const gridPositionY = mouse.y - (mouse.y % cellSize)
+    if(gridPositionY < cellSize) return //nothing will be placed on top highlighted area, function will just return and end 
+    let defendersCost = 100 //cost of defender (later might change it to have cheaper or more expensive units)
+    if(numberResources > defendersCost){
+        defenders.push(new Defender(gridPositionY, gridPositionX)) //creates a new blank defender object & checking if enough resources to place new defender
+        numberResources -= defendersCost //detuct defender cost from number of resources 
+    }
+})
+
+const handleDefenders = () => { //cycles through all elements in defenders array 
+    for(let i=0; defenders.length; i++){
+        defenders[i].draw()
+    }
+}
+
+
 // heroes 
 // enemies 
 // resources 
@@ -79,6 +117,7 @@ const animate = () => {
     ctx.fillStyle = 'blue'
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height) 
     handleGameGrid() 
+    handleDefenders()
     requestAnimationFrame(animate) //creates an animation loop (recursion) 
 }
 animate(); 
