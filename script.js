@@ -95,6 +95,9 @@ canvas.addEventListener('click', () => {
     const gridPositionX = mouse.x - (mouse.x % cellSize) //250-50 (value of closest horizontal grid position to the left)
     const gridPositionY = mouse.y - (mouse.y % cellSize)
     if(gridPositionY < cellSize) return //nothing will be placed on top highlighted area, function will just return and end 
+    for(let i=0; i < defenders.length; i++){
+        if(defenders[i].x === gridPositionX && defenders[i].y === gridPositionY) return //this prevents placing new defender on top of existing one
+    }
     let defendersCost = 100 //cost of defender (later might change it to have cheaper or more expensive units)
     if(numberResources >= defendersCost){
         defenders.push(new Defender(gridPositionY, gridPositionX)) //creates a new blank defender object & checking if enough resources to place new defender
@@ -114,12 +117,19 @@ handleDefenders(); //will keep this for now
 // enemies 
 // resources 
 // utilities 
+const handleGameStatus = () => {
+    ctx.fillStyle = 'gold'
+    ctx.font = '30px Arial'
+    ctx.fillText('Resources: ' + numberResources, 20, 55)
+}
+
 const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.fillStyle = 'blue'
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height) 
     handleGameGrid();
     handleDefenders();
+    handleGameStatus();
     requestAnimationFrame(animate) //creates an animation loop (recursion) 
 }
 animate(); 
