@@ -14,6 +14,8 @@ let numberResources = 300
 let enemiesInterval = 600
 let frame = 0
 let gameOver = false
+
+//global arrays 
 const gameGrid = [] 
 const defenders = []
 const enemies = [] 
@@ -45,7 +47,8 @@ const controlsBar = {
     height: cellSize, 
 }
 
-class Cell { //blueprint 
+//blueprint 
+class Cell { 
     constructor(x, y){
         this.x = x
         this.y = y 
@@ -116,8 +119,8 @@ class Defender {
     constructor(x, y){
         this.x = x
         this.y = y 
-        this.width = cellSize
-        this.height = cellSize
+        this.width = cellSize - cellGap * 2
+        this.height = cellSize - cellGap * 2
         this.shooting = false //defenders only shoot when they detect enemies 
         this.health = 100 //defenders loose health when colliding with enemies 
         this.projectiles = []
@@ -138,11 +141,11 @@ class Defender {
     }
 }
 canvas.addEventListener('click', () => {
-    const gridPositionX = mouse.x - (mouse.x % cellSize) //250-50 (value of closest horizontal grid position to the left)
-    const gridPositionY = mouse.y - (mouse.y % cellSize)
-    if(gridPositionY < cellSize) return //nothing will be placed on top highlighted area, function will just return and end 
+    const gridPositionX = mouse.x - (mouse.x % cellSize) - cellGap //250-50 (value of closest horizontal grid position to the left)
+    const gridPositionY = mouse.y - (mouse.y % cellSize) - cellGap
+    if(gridPositionY < cellSize) return; //nothing will be placed on top highlighted area, function will just return and end 
     for(let i=0; i < defenders.length; i++){
-        if(defenders[i].x === gridPositionX && defenders[i].y === gridPositionY) return //this prevents placing new defender on top of existing one
+        if(defenders[i].x === gridPositionX && defenders[i].y === gridPositionY) return; //this prevents placing new defender on top of existing one
     }
     let defendersCost = 100 //cost of defender (later might change it to have cheaper or more expensive units)
     if(numberResources >= defendersCost){
@@ -158,7 +161,7 @@ const handleDefenders = () => { //cycles through all elements in defenders array
         for (let j=0; j < enemies.length; j++){
             if(collision(defenders[i], enemies[j])){
                 enemies[j].movement = 0;
-                defenders[i].health -= 0.2;
+                defenders[i].health -= 1; //how fast a defender loses health 
             }
             if(defenders[i] && defenders[i].health <= 0){
                 defenders.splice(i, 1)
@@ -168,7 +171,6 @@ const handleDefenders = () => { //cycles through all elements in defenders array
         }
     }
 }
-handleDefenders(); //will keep this for now 
 
 
 // heroes 
