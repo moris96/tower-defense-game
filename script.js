@@ -113,6 +113,12 @@ canvas.addEventListener('click', () => {
 const handleDefenders = () => { //cycles through all elements in defenders array 
     for(let i=0; i < defenders.length; i++){
         defenders[i].draw();
+        for (let j=0; j < enemies.length; j++){
+            if (collision(defenders[i], enemies[j])){
+                enemies[j].movement = 0;
+                defenders[i].health -= 1;
+            }
+        }
     }
 }
 handleDefenders(); //will keep this for now 
@@ -126,7 +132,7 @@ class Enemy {
         this.y = verticalPosition
         this.width = cellSize
         this.height = cellSize
-        this.speed = Math.random() * 0.2 + 12 //random number between 0.4 & 0.6 
+        this.speed = Math.random() * 0.2 + 2 //random number between 0.4 & 0.6. might change later depends on difficulty 
         this.movement = this.speed //speed of enemies will change to 0 when colliding with defenders then move again if they defeat defenders 
         this.health = 100
         this.maxHealth = this.health //upon death enemies will reward recources depending on their max health 
@@ -166,9 +172,9 @@ const handleGameStatus = () => {
     ctx.font = '30px Blade Runner Movie Font'
     ctx.fillText('Resources: ' + numberResources, 20, 55)
     if(gameOver){
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
-        ctx.fillText = ('GAME OVER!', 135, 330) 
+        ctx.fillText('GAME OVER!', 135, 330) 
     }
 }
 

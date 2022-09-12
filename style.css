@@ -9,6 +9,6 @@ body {
     transform: translate(-50%, -50%);
     width: 900px;
     height: 600px;
-    background: white;
+    background: rgba(255, 255, 255, 0.4);
     font-family: 'Blade Runner Movie Font', sans-serif;
 }
