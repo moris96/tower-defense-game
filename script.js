@@ -10,14 +10,15 @@ canvas.height = 600
 // global variables 
 const cellSize = 100 //100px
 const cellGap = 3 //3x3 px 
-const gameGrid = [] 
-const defenders = []
 let numberResources = 300
-const enemies = []
-const enemyPositions = []
 let enemiesInterval = 600
 let frame = 0
 let gameOver = false
+const gameGrid = [] 
+const defenders = []
+const enemies = [] 
+const enemyPositions = []
+const projectiles = []
 
 //mouse (hovering over)
 const mouse = {
@@ -76,6 +77,40 @@ const handleGameGrid = () => {
 // console.log(gameGrid)
 
 // projectiles 
+class Projectiles {
+    constructor(x, y){
+        this.x = x
+        this.y = y
+        this.width = 10
+        this.height = 10
+        this.power = 20 //for now, depends on how strong certain enemies are and stuff 
+        this.speed = 5
+    }
+    update(){
+        this.x =+ this.speed //move projectiles to the right 
+    }
+    draw(){
+        ctx.fillStyle = 'black'
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.width, 0, Math.PI*2) //draws a circle 
+        ctx.fill()
+    }
+}
+
+const handleProjectiles = () => {
+    for(let i=0; i < projectiles.length; i++){
+        projectiles[i].update();
+        projectiles[i].draw();
+        
+        if(projectiles[i] && projectiles[i].x > canvas.width - cellSize){
+            projectiles.splice(i, 1);
+            i--;
+        }
+        console.log('projectiles ' + projectiles.length)
+    }
+}
+
+
 // defenders 
 class Defender {
     constructor(x, y){
@@ -95,6 +130,12 @@ class Defender {
         ctx.font = '30px Blade Runner Movie Font' 
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30) //display health meter 
     }
+    update(){
+        this.timer++
+        if(this.timer % 100 === 0){
+            projectiles.push(new Projectiles(this.x, this.y)) //every 100 frames push projectiles to projectiles array 
+        }
+    }
 }
 canvas.addEventListener('click', () => {
     const gridPositionX = mouse.x - (mouse.x % cellSize) //250-50 (value of closest horizontal grid position to the left)
@@ -113,6 +154,7 @@ canvas.addEventListener('click', () => {
 const handleDefenders = () => { //cycles through all elements in defenders array 
     for(let i=0; i < defenders.length; i++){
         defenders[i].draw();
+        defenders[i].update();
         for (let j=0; j < enemies.length; j++){
             if(collision(defenders[i], enemies[j])){
                 enemies[j].movement = 0;
@@ -189,6 +231,7 @@ const animate = () => {
     ctx.fillRect(0, 0, controlsBar.width, controlsBar.height);
     handleGameGrid();
     handleDefenders();
+    handleProjectiles();
     handleEnemies();
     handleGameStatus();
     frame++;
