@@ -114,9 +114,14 @@ const handleDefenders = () => { //cycles through all elements in defenders array
     for(let i=0; i < defenders.length; i++){
         defenders[i].draw();
         for (let j=0; j < enemies.length; j++){
-            if (collision(defenders[i], enemies[j])){
+            if(collision(defenders[i], enemies[j])){
                 enemies[j].movement = 0;
-                defenders[i].health -= 1;
+                defenders[i].health -= 0.2;
+            }
+            if(defenders[i] && defenders[i].health <= 0){
+                defenders.splice(i, 1)
+                i--;
+                enemies[j].movement = enemies[j].speed; //enemies move at original speed after collision after they kill defender 
             }
         }
     }
