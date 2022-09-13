@@ -9,15 +9,15 @@ canvas.height = 600
 //global vars 
 const cellSize = 100 
 const cellGap = 3
-let numberResources = 300 
-let enemiesInterval = 600 
+let numberMoney = 300 
+let villiansInterval = 600 
 let frame = 0
 let gameOver = false
 const gameGrid = []
-const defenders = []
-const enemies = []
-const enemyPositions = []
-const projectiles = []
+const heroes = []
+const villians = []
+const villianPositions = []
+const lasers = []
 
 //mouse
 const mouse = {
@@ -38,7 +38,7 @@ canvas.addEventListener('mouseleave', () => {
     mouse.y = undefined
 })
 
-//game board & game board 
+//game board 
 const controlsBar = {
     width: canvas.width,
     height: cellSize,
@@ -58,21 +58,49 @@ class Cell {
         }
     }
 }
-const createGrid = () => {
+function gameBoard(){
     for(let y=cellSize; y < canvas.height; y+=cellSize){
         for(let x=0; x < canvas.width; x+=cellSize){
             gameGrid.push(new Cell(x,y))
         }
     }
 }
-createGrid()
+gameBoard();
+
+function handleGameBoard(){
+    for(let i=0; i < gameGrid.length; i++){
+        gameGrid[i].draw()
+    }
+}
+
+
+
+//lasers 
+//weak villians 
+//strong villians 
+//final boss 
+//money 
+//utilities 
 
 
 
 
-const animate = () => {
+const anime = () => {
     ctx.clearRect(0,0, canvas.width, canvas.height)
     ctx.fillStyle = 'blue'
     ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
+    handleGameBoard();
+    requestAnimationFrame(anime);
 }
-animate();
+anime();
+
+
+function collision(first, second){
+    if (    !(  first.x > second.x + second.width ||
+                first.x + first.width < second.x ||
+                first.y > second.y + second.height ||
+                first.y + first.height < second.y)
+    ) {
+        return true;
+    }
+} 
