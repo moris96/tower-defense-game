@@ -1,4 +1,5 @@
 console.log('js connected')
+//reminder: normal functions are constructors ; arrow functions are only callable 
 
 //canvas 
 const canvas = document.getElementById('canvas')
@@ -80,7 +81,7 @@ function handleGameBoard(){
 //strong villians 
 //final boss 
 //money 
-//utilities 
+
 
 
 //heroes 
@@ -100,15 +101,18 @@ class Hero {
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'gold'
         ctx.font = '30px Blade Runner Movie Font'
-        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 25)
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
     }
 }
 canvas.addEventListener('click', () => {
     const gridPositionX = mouse.x - (mouse.x % cellSize)
     const gridPositionY = mouse.y - (mouse.y % cellSize)
     if(gridPositionY < cellSize) return; 
+    for(let i=0; i < heroes.length; i++){
+        if(heroes[i].x === gridPositionX && heroes[i].y === gridPositionY) return;
+    }
     let heroesCost = 100 
-    if(numberMoney > heroesCost){
+    if(numberMoney >= heroesCost){
         heroes.push(new Hero(gridPositionX, gridPositionY))
         numberMoney -= heroesCost
     }
@@ -121,6 +125,13 @@ function handleHeroes(){
 }
 
 
+//utilities 
+function handleGameStatus(){
+    ctx.fillStyle = 'gold'
+    ctx.font = '30px Blade Runner Movie Font'
+    ctx.fillText('Money: ' + numberMoney, 20, 55) 
+}
+
 
 
 
@@ -131,6 +142,7 @@ const anime = () => {
     ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
     handleGameBoard();
     handleHeroes();
+    handleGameStatus();
     requestAnimationFrame(anime);
 }
 anime();
