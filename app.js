@@ -83,6 +83,46 @@ function handleGameBoard(){
 //utilities 
 
 
+//heroes 
+class Hero {
+    constructor(x,y){
+        this.x = x
+        this.y = y 
+        this.width = cellSize
+        this.height = cellSize
+        this.shooting = false 
+        this.health = 100 
+        this.lasers = [] 
+        this.timer = 0 
+    }
+    draw(){
+        ctx.fillStyle = 'blue'
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.fillStyle = 'gold'
+        ctx.font = '30px Blade Runner Movie Font'
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 25)
+    }
+}
+canvas.addEventListener('click', () => {
+    const gridPositionX = mouse.x - (mouse.x % cellSize)
+    const gridPositionY = mouse.y - (mouse.y % cellSize)
+    if(gridPositionY < cellSize) return; 
+    let heroesCost = 100 
+    if(numberMoney > heroesCost){
+        heroes.push(new Hero(gridPositionX, gridPositionY))
+        numberMoney -= heroesCost
+    }
+})
+
+function handleHeroes(){
+    for(let i=0; i < heroes.length; i++){
+        heroes[i].draw();
+    }
+}
+
+
+
+
 
 
 const anime = () => {
@@ -90,6 +130,7 @@ const anime = () => {
     ctx.fillStyle = 'blue'
     ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
     handleGameBoard();
+    handleHeroes();
     requestAnimationFrame(anime);
 }
 anime();
