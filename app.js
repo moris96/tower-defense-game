@@ -77,6 +77,40 @@ function handleGameBoard(){
 }
 
 
+//lasers 
+class Lasers {
+    constructor(x,y){
+        this.x = x
+        this.y = y
+        this.width = 10
+        this.height = 20
+        this.power = 5
+        this.speed = 5
+    }
+    update(){
+        this.x += this.speed
+    }
+    draw(){
+        ctx.fillStyle = 'black'
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2)
+        ctx.fill()
+    }
+}
+
+function handleLasers(){
+    for(let i=0; i < lasers.length; i++){
+        lasers[i].update()
+        lasers[i].draw()
+        if(lasers[i] && lasers[i].x > canvas.width - cellSize){
+            lasers.splice(i,1) 
+            i-- 
+        }
+    }
+}
+
+
+
 
 //heroes 
 class Hero {
@@ -97,6 +131,12 @@ class Hero {
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
     }
+    update(){
+        this.timer++
+        if(this.timer % 100 === 0){
+            lasers.push(new Lasers(this.x + 70, this.y + 50))
+        }
+    }
 }
 canvas.addEventListener('click', () => {
     const gridPositionX = mouse.x - (mouse.x % cellSize)
@@ -115,10 +155,11 @@ canvas.addEventListener('click', () => {
 function handleHeroes(){
     for(let i=0; i < heroes.length; i++){
         heroes[i].draw();
+        heroes[i].update();
         for(let j=0; j < weakVillians.length; j++){
-            if(collision(heroes[i], weakVillians[j])){
+            if(heroes[i] && collision(heroes[i], weakVillians[j])){
                 weakVillians[j].movement = 0 
-                heroes[i].health -= 0.2 
+                heroes[i].health -= 1
             }
             if(heroes[i] && heroes[i].health <= 0){
                 heroes.splice(i,1) 
@@ -140,7 +181,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 2 //change to 0.4 later once everything work 
+        this.speed = Math.random() * 0.2 + 1 //change to 0.4 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
@@ -179,7 +220,7 @@ function handleWeakVillians(){
 //strong villians strong "Strongs"
 //final boss called "Boss"
 //money 
-//lasers 
+
 
 
 
@@ -206,6 +247,7 @@ const anime = () => {
     ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
     handleGameBoard();
     handleHeroes();
+    handleLasers();
     handleWeakVillians();
     handleGameStatus();
 
