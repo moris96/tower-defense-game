@@ -2,5 +2,8 @@
 
 ### ideas for game:
 * tower defense 
-    * heroes are like super saiyans 
-    * villains are like titans from AoT 
+
+#### rules: 
+* each time you kill a villian, your score increases by 10 
+* if a single villian breaks through your defenses you lose! 
+* to win you need to defend against 3 rounds of villians, including a final boss in round 3! 
