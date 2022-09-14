@@ -15,7 +15,7 @@ let weakVilliansInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 10; //leave for now for dev purposes might increase depends on time and stuff 
+const winningScore = 40; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
 
 //global arrays 
 const gameGrid = [];
@@ -24,6 +24,7 @@ const weakVillians = [];
 const weakVillianPositions = [];
 const lasers = [];
 const money = [];
+
 
 //mouse
 const mouse = {
@@ -87,7 +88,7 @@ class Lasers {
         this.y = y
         this.width = 10
         this.height = 20
-        this.power = 50 //leave for now for dev purposes then change to 20 
+        this.power = 20 
         this.speed = 5
     }
     update(){
@@ -152,19 +153,7 @@ class Hero {
         }
     }
 }
-canvas.addEventListener('click', () => {
-    const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap
-    const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap
-    if(gridPositionY < cellSize) return; 
-    for(let i=0; i < heroes.length; i++){
-        if(heroes[i].x === gridPositionX && heroes[i].y === gridPositionY) return;
-    }
-    let heroesCost = 100 
-    if(numberMoney >= heroesCost){
-        heroes.push(new Hero(gridPositionX, gridPositionY))
-        numberMoney -= heroesCost
-    }
-})
+
 
 function handleHeroes(){
     for(let i=0; i < heroes.length; i++){
@@ -190,6 +179,41 @@ function handleHeroes(){
 }
 
 
+//floating messages 
+const floatingMessages = [];
+class floatingMessage {
+    constructor(value, x, y, size, color){
+        this.value = value
+        this.x = x 
+        this.y = y 
+        this.size = size 
+        this.lifeSpan = 0
+        this.color = color
+        this.opacity = 1
+    }
+    update(){
+        this.y -= 0.3
+        this.lifeSpan += 1
+        if(this.opacity > 0.03) this.opacity -= 0.03
+    }
+    draw(){
+        this.globalAlpha = this.opacity
+        ctx.fillStyle = this.color 
+        ctx.font = this.size + 'px Blade Runner Movie Font'
+        ctx.fillText(this.value, this.x, this.y)
+        ctx.globalAlpha = 1 
+    }
+}
+function handleFloatingMessages(){
+    for(let i=0; i < floatingMessages.length; i++){
+        floatingMessages[i].update()
+        floatingMessages[i].draw()
+        if(floatingMessages[i].lifeSpan >= 50){
+            floatingMessages.splice(i, 1)
+            i--;
+        }
+    }
+}
 
 
 
@@ -200,7 +224,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 0.7 //change to 0.4 later once everything work 
+        this.speed = Math.random() * 0.2 + 0.8 //change to 0.4 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
@@ -225,6 +249,8 @@ function handleWeakVillians(){
         }
         if(weakVillians[i].health <= 0){
             let gainedResources = weakVillians[i].maxHealth/10;
+            floatingMessages.push(new floatingMessage('+' + gainedResources, weakVillians[i].x, weakVillians[i].y, 30, 'black'))
+            floatingMessages.push(new floatingMessage('+' + gainedResources, 250, 50, 30, 'gold'))
             numberMoney += gainedResources;
             score += gainedResources;
             const findThisIndex = weakVillianPositions.indexOf(weakVillians[i].y);
@@ -279,6 +305,8 @@ function handleMoney(){
         money[i].draw();
         if(money[i] && mouse.x && mouse.y && collision(money[i], mouse)){
             numberMoney += money[i].amount
+            floatingMessages.push(new floatingMessage('+' + money[i].amount, money[i].x, money[i].y, 30, 'black'))
+            floatingMessages.push(new floatingMessage('+' + money[i].amount, 250, 50, 30, 'gold'))
             money.splice(i, 1)
             i--;
         }
@@ -296,17 +324,37 @@ function handleGameStatus(){
     if(gameOver){
         ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
-        ctx.fillText('GAME OVER!', 135, 330) 
+        ctx.fillText('Game Over! You lose!', 95, 300) 
+
+        // document.getElementById('reset').addEventListener('click', () => {
+        //     ctx.clearRect(canvas)
+        // }, false) //will fix this problem later just want to make the game work for now 
     }
     if(score > winningScore && weakVillians.length === 0){
         ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
-        ctx.fillText('LEVEL COMPLETE!', 130, 300)
+        ctx.fillText('Level 1 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
     }
 }
 
+
+canvas.addEventListener('click', () => {
+    const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap
+    const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap
+    if(gridPositionY < cellSize) return; 
+    for(let i=0; i < heroes.length; i++){
+        if(heroes[i].x === gridPositionX && heroes[i].y === gridPositionY) return;
+    }
+    let heroesCost = 100 
+    if(numberMoney >= heroesCost){
+        heroes.push(new Hero(gridPositionX, gridPositionY))
+        numberMoney -= heroesCost
+    } else{
+        floatingMessages.push(new floatingMessage('need mo money', mouse.x, mouse.y, 20, 'blue')); 
+    }
+});
 
 
 
@@ -321,6 +369,7 @@ const anime = () => {
     handleLasers();
     handleWeakVillians();
     handleGameStatus();
+    handleFloatingMessages();
     frame++;
     if(!gameOver) requestAnimationFrame(anime);
 }
