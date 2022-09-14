@@ -1,26 +1,27 @@
-console.log('js connected')
+console.log('js connected');
 //reminder: normal functions are constructors ; arrow functions are only callable 
 
 //canvas 
-const canvas = document.getElementById('canvas')
-const ctx = canvas.getContext('2d')
-canvas.width = 900
-canvas.height = 600 
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = 900;
+canvas.height = 600;
 
 //global vars 
-const cellSize = 100 
-const cellGap = 3
-let numberMoney = 300 
-let weakVilliansInterval = 600 
-let frame = 0
-let gameOver = false
+const cellSize = 100;
+const cellGap = 3;
+let numberMoney = 300; 
+let weakVilliansInterval = 600; 
+let frame = 0;
+let gameOver = false;
+let score = 0;
 
 //global arrays 
-const gameGrid = []
-const heroes = []
-const weakVillians = []
-const weakVillianPositions = []
-const lasers = []
+const gameGrid = [];
+const heroes = [];
+const weakVillians = [];
+const weakVillianPositions = [];
+const lasers = [];
 
 //mouse
 const mouse = {
@@ -84,7 +85,7 @@ class Lasers {
         this.y = y
         this.width = 10
         this.height = 20
-        this.power = 5
+        this.power = 50 //leave for now for dev purposes then change to 20 
         this.speed = 5
     }
     update(){
@@ -102,6 +103,13 @@ function handleLasers(){
     for(let i=0; i < lasers.length; i++){
         lasers[i].update()
         lasers[i].draw()
+        for(let j=0; j < weakVillians.length; j++){
+            if(weakVillians[j] && lasers[i] && collision(lasers[i], weakVillians[j])){
+                weakVillians[j].health -= lasers[i].power
+                lasers.splice(i,1)
+                i--;
+            }
+        }
         if(lasers[i] && lasers[i].x > canvas.width - cellSize){
             lasers.splice(i,1) 
             i-- 
@@ -117,8 +125,8 @@ class Hero {
     constructor(x,y){
         this.x = x
         this.y = y 
-        this.width = cellSize
-        this.height = cellSize
+        this.width = cellSize - cellGap * 2
+        this.height = cellSize - cellGap * 2
         this.shooting = false 
         this.health = 100 
         this.lasers = [] 
@@ -132,15 +140,19 @@ class Hero {
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
     }
     update(){
-        this.timer++
-        if(this.timer % 100 === 0){
-            lasers.push(new Lasers(this.x + 70, this.y + 50))
+        if (this.shooting){
+            this.timer++;
+            if (this.timer % 100 === 0){
+                lasers.push(new Lasers(this.x + 70, this.y + 50));
+            }
+        } else {
+            this.timer = 0;
         }
     }
 }
 canvas.addEventListener('click', () => {
-    const gridPositionX = mouse.x - (mouse.x % cellSize)
-    const gridPositionY = mouse.y - (mouse.y % cellSize)
+    const gridPositionX = mouse.x - (mouse.x % cellSize) + cellGap
+    const gridPositionY = mouse.y - (mouse.y % cellSize) + cellGap
     if(gridPositionY < cellSize) return; 
     for(let i=0; i < heroes.length; i++){
         if(heroes[i].x === gridPositionX && heroes[i].y === gridPositionY) return;
@@ -156,6 +168,11 @@ function handleHeroes(){
     for(let i=0; i < heroes.length; i++){
         heroes[i].draw();
         heroes[i].update();
+        if(weakVillianPositions.indexOf(heroes[i].y) !== -1){
+            heroes[i].shooting = true
+        } else{
+            heroes[i].shooting = false
+        }
         for(let j=0; j < weakVillians.length; j++){
             if(heroes[i] && collision(heroes[i], weakVillians[j])){
                 weakVillians[j].movement = 0 
@@ -181,7 +198,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 1 //change to 0.4 later once everything work 
+        this.speed = Math.random() * 0.2 + 2 //change to 0.4 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
@@ -204,6 +221,15 @@ function handleWeakVillians(){
         if(weakVillians[i].x < 0){
             gameOver = true
         }
+        if(weakVillians[i].health <= 0){
+            let gainedResources = weakVillians[i].maxHealth/10;
+            numberMoney += gainedResources;
+            score += gainedResources;
+            const findThisIndex = weakVillianPositions.indexOf(weakVillians[i].y);
+            weakVillianPositions.splice(findThisIndex, 1);
+            weakVillians.splice(i, 1);
+            i--;
+          }
     }
     if(frame % weakVilliansInterval === 0){
         let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize
@@ -219,6 +245,11 @@ function handleWeakVillians(){
 
 //strong villians strong "Strongs"
 //final boss called "Boss"
+
+
+
+
+
 //money 
 
 
@@ -229,7 +260,8 @@ function handleWeakVillians(){
 function handleGameStatus(){
     ctx.fillStyle = 'gold'
     ctx.font = '30px Blade Runner Movie Font'
-    ctx.fillText('Money: ' + numberMoney, 20, 55) 
+    ctx.fillText('Score: ' + score, 20, 35) 
+    ctx.fillText('Money: ' + numberMoney, 20, 75) 
     if(gameOver){
         ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
@@ -250,7 +282,6 @@ const anime = () => {
     handleLasers();
     handleWeakVillians();
     handleGameStatus();
-
     frame++;
     if(!gameOver) requestAnimationFrame(anime);
 }
