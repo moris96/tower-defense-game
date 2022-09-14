@@ -15,6 +15,7 @@ let weakVilliansInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
+const winningScore = 10; //leave for now for dev purposes might increase depends on time and stuff 
 
 //global arrays 
 const gameGrid = [];
@@ -22,6 +23,7 @@ const heroes = [];
 const weakVillians = [];
 const weakVillianPositions = [];
 const lasers = [];
+const money = [];
 
 //mouse
 const mouse = {
@@ -198,7 +200,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 2 //change to 0.4 later once everything work 
+        this.speed = Math.random() * 0.2 + 0.7 //change to 0.4 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
@@ -231,8 +233,8 @@ function handleWeakVillians(){
             i--;
           }
     }
-    if(frame % weakVilliansInterval === 0){
-        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize
+    if(frame % weakVilliansInterval === 0 && score < winningScore){
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap
         weakVillians.push(new WeaksV(verticalPosition))
         weakVillianPositions.push(verticalPosition)
         if(weakVilliansInterval > 120) weakVilliansInterval -= 50 
@@ -251,8 +253,37 @@ function handleWeakVillians(){
 
 
 //money 
+const amounts = [20, 50, 80] //might change later depends 
 
-
+class Money {
+    constructor(){
+        this.x = Math.random() * (canvas.width - cellSize)
+        this.y = (Math.floor(Math.random() * 5) + 1) * cellSize + 25
+        this.width = cellSize * 0.6
+        this.height = cellSize * 0.6
+        this.amount = amounts[Math.floor(Math.random() * amounts.length)] 
+    }
+    draw(){
+        ctx.fillStyle = 'yellow'
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.fillStyle = 'black'
+        ctx.font = '20px Blade Runner Movie Font'
+        ctx.fillText(this.amount, this.x + 15, this.y + 25)
+    }
+}
+function handleMoney(){
+    if(frame % 500 === 0 && score < winningScore){
+        money.push(new Money())
+    }
+    for(let i=0; i < money.length; i++){
+        money[i].draw();
+        if(money[i] && mouse.x && mouse.y && collision(money[i], mouse)){
+            numberMoney += money[i].amount
+            money.splice(i, 1)
+            i--;
+        }
+    }
+}
 
 
 
@@ -267,6 +298,13 @@ function handleGameStatus(){
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('GAME OVER!', 135, 330) 
     }
+    if(score > winningScore && weakVillians.length === 0){
+        ctx.fillStyle = 'gold'
+        ctx.font = '60px Blade Runner Movie Font'
+        ctx.fillText('LEVEL COMPLETE!', 130, 300)
+        ctx.font = '30px Blade Runner Movie Font'
+        ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
+    }
 }
 
 
@@ -279,6 +317,7 @@ const anime = () => {
     ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
     handleGameBoard();
     handleHeroes();
+    handleMoney();
     handleLasers();
     handleWeakVillians();
     handleGameStatus();
@@ -297,3 +336,7 @@ function collision(first, second){
         return true;
     }
 } 
+
+window.addEventListener('resize', () => {
+    canvasPosition = canvas.getBoundingClientRect();
+})
