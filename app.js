@@ -220,7 +220,7 @@ function handleFloatingMessages(){
 
 //weak villians called "WeaksV"
 const villian1 = new Image();
-villian1.src = 'sprites/villians/zombie1.gif';
+villian1.src = 'sprites/villians/zombie2.gif';
 villianTypes.push(villian1);
 
 class WeaksV {
@@ -238,13 +238,13 @@ class WeaksV {
         this.frameY = 0
         this.minFrame = 0
         this.maxFrame = 0
-        this.spriteWidth = 300
-        this.spriteHeight = 300
+        this.spriteWidth = 256
+        this.spriteHeight = 256
     }
     update(){
         this.x -= this.movement
         if(frame % 10 === 0){
-            if(this.frameX <= this.maxFrame) this.frameX++
+            if(this.frameX < this.maxFrame) this.frameX++
             else this.frameX = this.frameX = this.minFrame
         }  
     }
