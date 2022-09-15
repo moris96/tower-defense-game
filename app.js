@@ -25,6 +25,7 @@ const weakVillianPositions = [];
 const lasers = [];
 const money = [];
 const floatingMessages = [];
+const villianTypes = [];
 
 
 //mouse
@@ -218,6 +219,10 @@ function handleFloatingMessages(){
 
 
 //weak villians called "WeaksV"
+const villian1 = new Image();
+villian1.src = 'sprites/villians/zombie1.gif';
+villianTypes.push(villian1);
+
 class WeaksV {
     constructor(verticalPosition){
         this.x = canvas.width
@@ -228,9 +233,20 @@ class WeaksV {
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
+        this.villianType = villianTypes[0] 
+        this.frameX = 0
+        this.frameY = 0
+        this.minFrame = 0
+        this.maxFrame = 0
+        this.spriteWidth = 300
+        this.spriteHeight = 300
     }
     update(){
         this.x -= this.movement
+        if(frame % 10 === 0){
+            if(this.frameX <= this.maxFrame) this.frameX++
+            else this.frameX = this.frameX = this.minFrame
+        }  
     }
     draw(){
         ctx.fillStyle = 'red'
@@ -238,6 +254,8 @@ class WeaksV {
         ctx.fillStyle = 'black'
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
+        // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
+        ctx.drawImage(this.villianType, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
 }
 function handleWeakVillians(){
