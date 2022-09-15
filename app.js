@@ -24,6 +24,7 @@ const weakVillians = [];
 const weakVillianPositions = [];
 const lasers = [];
 const money = [];
+const floatingMessages = [];
 
 
 //mouse
@@ -180,7 +181,6 @@ function handleHeroes(){
 
 
 //floating messages 
-const floatingMessages = [];
 class floatingMessage {
     constructor(value, x, y, size, color){
         this.value = value
