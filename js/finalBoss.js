@@ -15,7 +15,7 @@ let weakVilliansInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 20; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
+const winningScore = 40; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
 
 //global arrays 
 const gameGrid = [];
@@ -232,7 +232,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 0.8 //change to 0.8 later once everything work 
+        this.speed = Math.random() * 0.2 + 4 //change to 0.8 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
@@ -336,13 +336,14 @@ function handleMoney(){
 
 
 //event listener vars
-const levelTwoBtn = document.getElementById('level-2');
-levelTwoBtn.addEventListener('click', changeLevel);
+// const levelTwoBtn = document.getElementById('level-2');
+// levelTwoBtn.addEventListener('click', changeLevel)
 
-function changeLevel(){
-    document.getElementById('level-2').innerHTML = `
-    <button type="button" onclick="location.href='level_two.html'">Level 2</button>`
-}
+// function changeLevel(){
+//     document.getElementById('level-2').innerHTML = `
+//     <button type="button" onclick="location.href='level_two.html'">Level 2</button>`
+// }
+
 
 
 
@@ -358,6 +359,7 @@ function handleGameStatus(){
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('Game Over! You lose!', 95, 300) 
 
+        // changeLevel();
     }
 
     if(score > winningScore && weakVillians.length === 0){
@@ -366,10 +368,6 @@ function handleGameStatus(){
         ctx.fillText('Level 1 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-        
-    }
-    if(score===winningScore){
-        changeLevel();
     }
 }
 

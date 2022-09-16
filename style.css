@@ -10,8 +10,14 @@ h1 {
     margin: auto;
 }
 
+button {
+    font-family: 'Blade Runner Movie Font', sans-serif;
+}
 
-
+#level-2 {
+    background-color: #EB7803;
+    border: none;
+}
 
 #canvas {
     position: absolute;
