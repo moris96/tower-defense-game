@@ -12,6 +12,7 @@ const cellSize = 100;
 const cellGap = 3;
 let numberMoney = 300; 
 let weakVilliansInterval = 600; 
+let bossesInterval = 600;
 let frame = 0;
 let gameOver = false;
 let score = 0;
@@ -23,10 +24,13 @@ const gameGrid = [];
 const heroes = [];
 const weakVillians = [];
 const weakVillianPositions = [];
+const bosses = [];
+const bossesPositions = [];
 const lasers = [];
 const money = [];
 const floatingMessages = [];
 const villianTypes = [];
+const bossesTypes = [];
 
 
 
@@ -130,6 +134,26 @@ function handleLasers(){
                 i--;
             }
         }
+        for(let i=0; i < lasers.length; i++){
+            lasers[i].update()
+            lasers[i].draw()
+            for(let j=0; j < bosses.length; j++){
+                if(bosses[j] && lasers[i] && collision(lasers[i], bosses[j])){
+                    bosses[j].health -= lasers[i].power
+                    lasers.splice(i,1)
+                    i--;
+                }
+            }
+        }
+
+        // for(let k=0; k < bosses.length; k++){
+        //     if(bosses[k] && lasers[i] && collision(lasers[i], bosses[k])){
+        //         bosses[k].health -= lasers[i].power
+        //         lasers.slice(i,1)
+        //         i--;
+        //     }
+        // }
+
         if(lasers[i] && lasers[i].x > canvas.width - cellSize){
             lasers.splice(i,1) 
             i-- 
@@ -192,11 +216,34 @@ class Hero {
 
 
 function handleHeroes(){
+    // for(let i=0; i < heroes.length; i++){
+    //     heroes[i].draw();
+    //     heroes[i].update();
+    //     if(weakVillianPositions.indexOf(heroes[i].y) !== -1){
+    //         heroes[i].shooting = true
+    //     } else{
+    //         heroes[i].shooting = false
+    //     }
+    //     for(let j=0; j < weakVillians.length; j++){
+    //         if(heroes[i] && collision(heroes[i], weakVillians[j])){
+    //             weakVillians[j].movement = 0 
+    //             heroes[i].health -= 1
+    //         }
+    //         if(heroes[i] && heroes[i].health <= 0){
+    //             heroes.splice(i,1) 
+    //             i--
+    //             weakVillians[j].movement = weakVillians[j].speed
+    //         }
+    //     }
+    // }
+
     for(let i=0; i < heroes.length; i++){
         heroes[i].draw();
         heroes[i].update();
         if(weakVillianPositions.indexOf(heroes[i].y) !== -1){
             heroes[i].shooting = true
+        } else if(bossesPositions.indexOf(heroes[i].y) !== -1 {
+            heroes[i].shooting = true 
         } else{
             heroes[i].shooting = false
         }
@@ -296,6 +343,75 @@ function handleFloatingMessages(){
     }
 }
 
+//boss 
+const boss1 = new Image();
+boss1.src = 'sprites/bosses/boss1.gif';
+bossesTypes.push(boss1);
+
+class Boss {
+    constructor(verticalPosition){
+        this.x = canvas.width
+        this.y = verticalPosition
+        this.width = cellSize - cellGap * 2
+        this.height = cellSize - cellGap * 2 
+        this.speed = Math.random() * 0.2 + 0.8 //change to 0.8 later once everything works 
+        this.movement = this.speed
+        this.health = 200 
+        this.maxHealth = this.health
+        this.bossesType = bossesTypes[Math.floor(Math.random() * bossesTypes.length)]
+        this.frameX = 0
+        this.frameY = 0
+        this.minFrame = 0
+        this.maxFrame = 0
+        this.spriteWidth = 145
+        this.spriteHeight = 200 
+    }
+    update(){
+        this.x -= this.movement
+        if(frame % 10 === 0){
+            if(this.frameX < this.maxFrame) this.frameX++
+            else this.frameX = this.frameY = this.minFrame
+        }
+    }
+    draw(){
+        // ctx.fillStyle = 'red'
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
+        ctx.fillStyle = 'black'
+        ctx.font = '30px Blade Runner Movie Font'
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
+        // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
+        ctx.drawImage(this.bossesType, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+    }
+}
+function handleBosses(){
+    for(let i=0; i < bosses.length; i++){
+        bosses[i].update()
+        bosses[i].draw()
+        if(bosses[i].x < 0){
+            gameOver = true
+        }
+        if(bosses[i].health <= 0){
+            let gainedResources = bosses[i].maxHealth/10;
+            floatingMessages.push(new floatingMessage('+' + gainedResources, bosses[i].y, 30, 'black'))
+            floatingMessages.push(new floatingMessage('+' + gainedResources, 50, 50, 30, 'gold'))
+            numberMoney += gainedResources;
+            score += gainedResources;
+            const findThisIndex = bossesPositions.indexOf(bosses[i].y);
+            bossesPositions.splice(findThisIndex, 1);
+            bosses.splice(i, 1);
+            i--;
+        }
+    }
+    if(frame % bossesInterval === 0 && score < winningScore){
+        let verticalPosition = Math.floor(Math.random() * 5 + 1) * cellSize + cellGap
+        bosses.push(new Boss(verticalPosition))
+        bossesPositions.push(verticalPosition)
+        if(bossesInterval > 120) bossesInterval -= 50
+    }
+}
+
+
+
 
 
 //weak villians called "WeaksV"
@@ -368,16 +484,6 @@ function handleWeakVillians(){
         if(weakVilliansInterval > 120) weakVilliansInterval -= 50 
     }
 }
-
-
-
-
-
-//strong villians strong "Strongs"
-//final boss called "Boss"
-
-
-
 
 
 //money 
@@ -493,6 +599,7 @@ const anime = () => {
     handleMoney();
     handleLasers();
     handleWeakVillians();
+    handleBosses();
     changeHero();
     handleGameStatus();
     handleFloatingMessages();
@@ -506,7 +613,8 @@ function collision(first, second){
     if (    !(  first.x > second.x + second.width ||
                 first.x + first.width < second.x ||
                 first.y > second.y + second.height ||
-                first.y + first.height < second.y)
+                first.y + first.height < second.y
+                )
     ) {
         return true;
     }
