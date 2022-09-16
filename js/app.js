@@ -166,8 +166,8 @@ class Hero {
         this.chosenHero = chosenHero
     }
     draw(){
-        ctx.fillStyle = 'blue'
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = 'blue'
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'gold'
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
@@ -420,9 +420,17 @@ function handleMoney(){
 const levelTwoBtn = document.getElementById('level-2');
 levelTwoBtn.addEventListener('click', changeLevel);
 
+const tryAgainBtn = document.getElementById('try-again');
+tryAgainBtn.addEventListener('click', tryAgain);
+
 function changeLevel(){
     document.getElementById('level-2').innerHTML = `
     <button type="button" onclick="location.href='level_two.html'">Level 2</button>`
+}
+
+function tryAgain(){
+    document.getElementById('try-again').innerHTML = `
+    <button type="button" onclick="location.href='level_one.html'">Try Again</button>`
 }
 
 function handleGameStatus(){
@@ -435,7 +443,7 @@ function handleGameStatus(){
         ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('Game Over! You lose!', 95, 300) 
-
+        tryAgain();
     }
 
     if(score > winningScore && weakVillians.length === 0){

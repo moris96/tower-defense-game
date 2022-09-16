@@ -19,6 +19,28 @@ button {
     border: none;
 }
 
+#try-again {
+    background-color: #EB7803;
+    border: none;
+    color: #EB7803;
+}
+
+#final-boss {
+    background-color: #EB7803;
+    border: none;
+    color: #EB7803;
+}
+
+#reward {
+    background-color: #EB7803;
+    border: none;
+    color: #EB7803;
+}
+
+
+
+
+
 #canvas {
     position: absolute;
     top: 50%;
