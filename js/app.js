@@ -344,9 +344,9 @@ function handleGameStatus(){
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('Game Over! You lose!', 95, 300) 
 
-        // document.getElementById('reset').addEventListener('click', () => {
-        //     ctx.clearRect(canvas)
-        // }, false) //will fix this problem later just want to make the game work for now 
+        document.getElementById('reset').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height) 
+        }, false) //will fix this problem later just want to make the game work for now 
     }
     if(score > winningScore && weakVillians.length === 0){
         ctx.fillStyle = 'gold'
@@ -354,7 +354,11 @@ function handleGameStatus(){
         ctx.fillText('Level 1 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-    }
+
+        document.getElementById('level-2').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height) 
+        }) //will fix this problem later just want to make the game work for now 
+    } 
 }
 
 

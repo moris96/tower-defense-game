@@ -1,10 +1,17 @@
 body {
-    background: black;
+    background-color: #EB7803;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 h1 {
-    color: white;
+    height: 200px;
+    width: 900px;
+    text-align: center;
+    margin: auto;
 }
+
+
+
 
 #canvas {
     position: absolute;
