@@ -10,12 +10,12 @@ canvas.height = 600;
 //global vars 
 const cellSize = 100;
 const cellGap = 3;
-let numberMoney = 300; 
-let weakVilliansInterval = 600; 
+let numberMoney = 500; 
+let weakVilliansInterval = 530; 
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 20; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
+const winningScore = 400; 
 let chosenHero = 1;
 
 //global arrays 
@@ -105,8 +105,8 @@ class Lasers {
         this.y = y
         this.width = 10
         this.height = 20
-        this.power = 20 
-        this.speed = 5
+        this.power = 100
+        this.speed = 12
     }
     update(){
         this.x += this.speed
@@ -300,12 +300,8 @@ function handleFloatingMessages(){
 
 //weak villians called "WeaksV"
 const villian1 = new Image();
-villian1.src = 'sprites/villians/zombie1.gif';
+villian1.src = 'sprites/bosses/finalBoss.gif';
 villianTypes.push(villian1);
-
-const villian2 = new Image();
-villian2.src = 'sprites/villians/zombie2.gif';
-villianTypes.push(villian2); 
 
 class WeaksV {
     constructor(verticalPosition){
@@ -313,17 +309,17 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 0.8 //change to 0.8 later once everything work 
+        this.speed = Math.random() * 0.2 + 1 
         this.movement = this.speed
-        this.health = 100
+        this.health = 800
         this.maxHealth = this.health
         this.villianType = villianTypes[Math.floor(Math.random() * villianTypes.length)] 
         this.frameX = 0
         this.frameY = 0
         this.minFrame = 0
         this.maxFrame = 0
-        this.spriteWidth = 480
-        this.spriteHeight = 480
+        this.spriteWidth = 200
+        this.spriteHeight = 200
     }
     update(){
         this.x -= this.movement
@@ -348,7 +344,7 @@ function handleWeakVillians(){
         weakVillians[i].draw()
         if(weakVillians[i].x < 0){
             gameOver = true
-        }
+        } 
         if(weakVillians[i].health <= 0){
             let gainedResources = weakVillians[i].maxHealth/10;
             floatingMessages.push(new floatingMessage('+' + gainedResources, weakVillians[i].x, weakVillians[i].y, 30, 'black'))
@@ -449,12 +445,12 @@ function handleGameStatus(){
     if(score > winningScore && weakVillians.length === 0){
         ctx.fillStyle = 'gold'
         ctx.font = '60px Blade Runner Movie Font'
-        ctx.fillText('Level 1 complete!', 130, 300)
+        ctx.fillText('You are the champion!', 100, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-        
+        claimReward();
     }
-    if(score===winningScore){
+    if(score>=winningScore){
         claimReward();
     }
 }
