@@ -93,7 +93,7 @@ class Lasers {
         this.y = y
         this.width = 10
         this.height = 20
-        this.power = 20 
+        this.power = 40 
         this.speed = 5
     }
     update(){
@@ -232,9 +232,9 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 4 //change to 0.8 later once everything work 
+        this.speed = Math.random() * 0.2 + 1 //change to 0.8 later once everything work 
         this.movement = this.speed
-        this.health = 100
+        this.health = 200
         this.maxHealth = this.health
         this.villianType = villianTypes[0] 
         this.frameX = 0
@@ -389,7 +389,7 @@ canvas.addEventListener('click', () => {
         heroes.push(new Hero(gridPositionX, gridPositionY))
         numberMoney -= heroesCost
     } else{
-        floatingMessages.push(new floatingMessage('mo money mo problems', mouse.x, mouse.y, 20, 'blue')); 
+        floatingMessages.push(new floatingMessage('need more money', mouse.x, mouse.y, 20, 'blue')); 
     }
 });
 

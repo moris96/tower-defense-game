@@ -16,6 +16,7 @@ let frame = 0;
 let gameOver = false;
 let score = 0;
 const winningScore = 20; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
+let chosenHero = 1;
 
 //global arrays 
 const gameGrid = [];
@@ -31,15 +32,26 @@ const villianTypes = [];
 
 
 
+
 //mouse
 const mouse = {
     x: 10,
     y: 10, 
     width: 0.1, 
     height: 0.1,
+    clicked: false 
 }
 
 let canvasPosition = canvas.getBoundingClientRect()
+
+canvas.addEventListener('mousedown', () => {
+    mouse.clicked = true
+})
+
+canvas.addEventListener('mouseup', () => {
+    mouse.clicked = false
+})
+
 
 canvas.addEventListener('mousemove', (evt) => {
     mouse.x = evt.x - canvasPosition.left
@@ -129,6 +141,12 @@ function handleLasers(){
 
 
 //heroes 
+const hero1 = new Image();
+hero1.src = 'sprites/heroes/hero1.gif'
+
+const hero2 = new Image();
+hero2.src = 'sprites/heroes/hero2.gif'
+
 class Hero {
     constructor(x,y){
         this.x = x
@@ -139,13 +157,26 @@ class Hero {
         this.health = 100 
         this.lasers = [] 
         this.timer = 0 
+        this.frameX = 0
+        this.frameY = 0
+        this.spriteWidth = 256
+        this.spriteHeight = 256
+        this.minFrame = 0
+        this.maxFrame = 0
+        this.chosenHero = chosenHero
     }
     draw(){
         ctx.fillStyle = 'blue'
         ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'gold'
         ctx.font = '30px Blade Runner Movie Font'
-        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
+        if(this.chosenHero === 1){
+            ctx.drawImage(hero1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        } else if(this.chosenHero === 2){
+            ctx.drawImage(hero2, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+        }
+        // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
     }
     update(){
         if (this.shooting){
@@ -181,6 +212,52 @@ function handleHeroes(){
             }
         }
     }
+}
+
+const card1 = {
+    x: 10,
+    y: 10,
+    width: 70,
+    height: 85
+}
+
+const card2 = {
+    x: 90,
+    y: 10,
+    width: 70,
+    height: 85
+}
+
+function changeHero(){
+    let card1stroke = 'black'
+    let card2stroke = 'black' 
+    if(collision(mouse, card1) && mouse.clicked){
+        chosenHero = 1
+    } else if (collision(mouse, card2) && mouse.clicked){
+        chosenHero = 2
+    }
+    if (chosenHero === 1){
+        card1stroke = 'gold'
+        card2stroke = 'black'
+    } else if(chosenHero === 2){
+        card1stroke = 'black'
+        card2stroke = 'gold'
+    } else {
+        card1stroke = 'black'
+        card2stroke = 'black'
+    }
+
+
+    ctx.lineWidth = 1
+    ctx.fillStyle = 'rgba(0,0,0,0.2)'
+    ctx.fillRect(card1.x, card1.y, card1.width, card1.height)
+    ctx.strokeStyle = card1stroke;
+    ctx.strokeRect(card1.x, card1.y, card1.width, card1.height)
+    ctx.drawImage(hero1, 0, 0, 194, 194, 0, 5, 194/2, 194/2)
+    ctx.fillRect(card2.x, card2.y, card2.width, card2.height)
+    ctx.drawImage(hero2, 0, 0, 194, 194, 80, 5, 194/2, 194/2)
+    ctx.strokeStyle = card2stroke;
+    ctx.strokeRect(card2.x, card2.y, card2.width, card2.height)
 }
 
 
@@ -223,8 +300,12 @@ function handleFloatingMessages(){
 
 //weak villians called "WeaksV"
 const villian1 = new Image();
-villian1.src = 'sprites/villians/zombie2.gif';
+villian1.src = 'sprites/villians/zombie1.gif';
 villianTypes.push(villian1);
+
+const villian2 = new Image();
+villian2.src = 'sprites/villians/zombie2.gif';
+villianTypes.push(villian2); 
 
 class WeaksV {
     constructor(verticalPosition){
@@ -236,13 +317,13 @@ class WeaksV {
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
-        this.villianType = villianTypes[0] 
+        this.villianType = villianTypes[Math.floor(Math.random() * villianTypes.length)] 
         this.frameX = 0
         this.frameY = 0
         this.minFrame = 0
         this.maxFrame = 0
-        this.spriteWidth = 256
-        this.spriteHeight = 256
+        this.spriteWidth = 480
+        this.spriteHeight = 480
     }
     update(){
         this.x -= this.movement
@@ -252,11 +333,11 @@ class WeaksV {
         }  
     }
     draw(){
-        ctx.fillStyle = 'red'
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = 'red'
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'black'
         ctx.font = '30px Blade Runner Movie Font'
-        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 30)
+        ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
         // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
         ctx.drawImage(this.villianType, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
     }
@@ -335,7 +416,7 @@ function handleMoney(){
 }
 
 
-//event listener vars
+//utilities && event listener vars
 const levelTwoBtn = document.getElementById('level-2');
 levelTwoBtn.addEventListener('click', changeLevel);
 
@@ -344,14 +425,11 @@ function changeLevel(){
     <button type="button" onclick="location.href='level_two.html'">Level 2</button>`
 }
 
-
-
-//utilities 
 function handleGameStatus(){
     ctx.fillStyle = 'gold'
     ctx.font = '30px Blade Runner Movie Font'
-    ctx.fillText('Score: ' + score, 20, 35) 
-    ctx.fillText('Money: ' + numberMoney, 20, 75) 
+    ctx.fillText('Score: ' + score, 180, 35) 
+    ctx.fillText('Money: ' + numberMoney, 180, 75) 
     
     if(gameOver){
         ctx.fillStyle = 'gold'
@@ -391,7 +469,7 @@ canvas.addEventListener('click', () => {
         heroes.push(new Hero(gridPositionX, gridPositionY))
         numberMoney -= heroesCost
     } else{
-        floatingMessages.push(new floatingMessage('mo money mo problems', mouse.x, mouse.y, 20, 'blue')); 
+        floatingMessages.push(new floatingMessage('need more money', mouse.x, mouse.y, 20, 'blue')); 
     }
 });
 
@@ -407,6 +485,7 @@ const anime = () => {
     handleMoney();
     handleLasers();
     handleWeakVillians();
+    changeHero();
     handleGameStatus();
     handleFloatingMessages();
     frame++;

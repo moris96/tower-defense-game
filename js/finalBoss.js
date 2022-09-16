@@ -389,7 +389,7 @@ canvas.addEventListener('click', () => {
         heroes.push(new Hero(gridPositionX, gridPositionY))
         numberMoney -= heroesCost
     } else{
-        floatingMessages.push(new floatingMessage('mo money mo problems', mouse.x, mouse.y, 20, 'blue')); 
+        floatingMessages.push(new floatingMessage('need more money', mouse.x, mouse.y, 20, 'blue')); 
     }
 });
 
