@@ -113,7 +113,7 @@ class Lasers {
         this.x += this.speed
     }
     draw(){
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = '#00fff7'
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.width, 0, Math.PI * 2)
         ctx.fill()
