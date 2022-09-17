@@ -1,5 +1,10 @@
 @import url('http://fonts.cdnfonts.com/css/blade-runner-movie-font');
 
+@font-face {
+    font-family: Blade Runner Movie Font;
+    src: url('http://fonts.cdnfonts.com/css/blade-runner-movie-font');
+}
+
 body {
     background-color: #EB7803;
     font-family: 'Blade Runner Movie Font', sans-serif;
