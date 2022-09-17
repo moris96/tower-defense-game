@@ -10,12 +10,12 @@ canvas.height = 600;
 //global vars 
 const cellSize = 100;
 const cellGap = 3;
-let numberMoney = 300; 
-let weakVilliansInterval = 400; 
+let numberMoney = 400; 
+let weakVilliansInterval = 600; 
 let frame = 0;
 let gameOver = false;
 let score = 0;
-const winningScore = 20; //leave for now for dev purposes might increase depends on time and stuff ; first level should be 50 
+const winningScore = 50; 
 let chosenHero = 1;
 
 //global arrays 
@@ -27,6 +27,7 @@ const lasers = [];
 const money = [];
 const floatingMessages = [];
 const villianTypes = [];
+const moneyTypes = [];
 
 
 
@@ -168,7 +169,7 @@ class Hero {
     draw(){
         // ctx.fillStyle = 'blue'
         // ctx.fillRect(this.x, this.y, this.width, this.height)
-        ctx.fillStyle = 'gold'
+        ctx.fillStyle = '#00fff7'
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
         if(this.chosenHero === 1){
@@ -237,11 +238,11 @@ function changeHero(){
         chosenHero = 2
     }
     if (chosenHero === 1){
-        card1stroke = 'gold'
+        card1stroke = '#57f542'
         card2stroke = 'black'
     } else if(chosenHero === 2){
         card1stroke = 'black'
-        card2stroke = 'gold'
+        card2stroke = '#57f542'
     } else {
         card1stroke = 'black'
         card2stroke = 'black'
@@ -335,7 +336,7 @@ class WeaksV {
     draw(){
         // ctx.fillStyle = 'red'
         // ctx.fillRect(this.x, this.y, this.width, this.height)
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = 'red'
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText(Math.floor(this.health), this.x + 15, this.y + 15)
         // ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh)
@@ -352,7 +353,7 @@ function handleWeakVillians(){
         if(weakVillians[i].health <= 0){
             let gainedResources = weakVillians[i].maxHealth/10;
             floatingMessages.push(new floatingMessage('+' + gainedResources, weakVillians[i].x, weakVillians[i].y, 30, 'black'))
-            floatingMessages.push(new floatingMessage('+' + gainedResources, 250, 50, 30, 'gold'))
+            floatingMessages.push(new floatingMessage('+' + gainedResources, 250, 50, 30, 'black'))
             numberMoney += gainedResources;
             score += gainedResources;
             const findThisIndex = weakVillianPositions.indexOf(weakVillians[i].y);
@@ -383,6 +384,11 @@ function handleWeakVillians(){
 //money 
 const amounts = [20, 50, 80] //might change later depends 
 
+const money1 = new Image();
+money1.src = 'sprites/money/money.gif';
+moneyTypes.push(money1);
+
+
 class Money {
     constructor(){
         this.x = Math.random() * (canvas.width - cellSize)
@@ -390,13 +396,28 @@ class Money {
         this.width = cellSize * 0.6
         this.height = cellSize * 0.6
         this.amount = amounts[Math.floor(Math.random() * amounts.length)] 
+        this.frameX = 0
+        this.frameY = 0
+        this.minFrame = 0
+        this.maxFrame = 0
+        this.spriteWidth = 200
+        this.spriteHeight = 192
     }
     draw(){
-        ctx.fillStyle = 'yellow'
-        ctx.fillRect(this.x, this.y, this.width, this.height)
+        // ctx.fillStyle = 'black'
+        // ctx.fillRect(this.x, this.y, this.width, this.height)
         ctx.fillStyle = 'black'
         ctx.font = '20px Blade Runner Movie Font'
         ctx.fillText(this.amount, this.x + 15, this.y + 25)
+    
+        ctx.drawImage(money1, this.frameX * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height)
+    }
+    update(){
+        this.x -= this.movement
+        if(frame % 10 === 0){
+            if(this.frameX < this.maxFrame) this.frameX++
+            else this.frameX = this.frameX = this.minFrame
+        }
     }
 }
 function handleMoney(){
@@ -407,8 +428,8 @@ function handleMoney(){
         money[i].draw();
         if(money[i] && mouse.x && mouse.y && collision(money[i], mouse)){
             numberMoney += money[i].amount
-            floatingMessages.push(new floatingMessage('+' + money[i].amount, money[i].x, money[i].y, 30, 'black'))
-            floatingMessages.push(new floatingMessage('+' + money[i].amount, 250, 50, 30, 'gold'))
+            floatingMessages.push(new floatingMessage('+' + money[i].amount, money[i].x, money[i].y, 30, '#57f542'))
+            floatingMessages.push(new floatingMessage('+' + money[i].amount, 350, 65, 30, '#57f542'))
             money.splice(i, 1)
             i--;
         }
@@ -434,29 +455,29 @@ function tryAgain(){
 }
 
 function handleGameStatus(){
-    ctx.fillStyle = 'gold'
+    ctx.fillStyle = '#57f542'
     ctx.font = '30px Blade Runner Movie Font'
     ctx.fillText('Score: ' + score, 180, 35) 
     ctx.fillText('Money: ' + numberMoney, 180, 75) 
     
     if(gameOver){
-        ctx.fillStyle = 'gold'
+        ctx.fillStyle = 'red'
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('Game Over! You lose!', 95, 300) 
         tryAgain();
     }
 
-    if(score > winningScore && weakVillians.length === 0){
-        ctx.fillStyle = 'gold'
+    if(score >= winningScore && weakVillians.length === 0){
+        ctx.fillStyle = 'red'
         ctx.font = '60px Blade Runner Movie Font'
         ctx.fillText('Level 1 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-        
-    }
-    if(score===winningScore){
         changeLevel();
     }
+    // if(score===winningScore){
+    //     changeLevel();
+    // }
 }
 
 
@@ -477,7 +498,7 @@ canvas.addEventListener('click', () => {
         heroes.push(new Hero(gridPositionX, gridPositionY))
         numberMoney -= heroesCost
     } else{
-        floatingMessages.push(new floatingMessage('need more money', mouse.x, mouse.y, 20, 'blue')); 
+        floatingMessages.push(new floatingMessage('need more money', mouse.x, mouse.y, 20, '#57f542')); 
     }
 });
 
@@ -487,7 +508,7 @@ canvas.addEventListener('click', () => {
 const anime = () => {
     ctx.clearRect(0,0, canvas.width, canvas.height)
     ctx.fillStyle = 'blue'
-    ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
+    // ctx.fillRect(0,0, controlsBar.width, controlsBar.height)
     handleGameBoard();
     handleHeroes();
     handleMoney();
