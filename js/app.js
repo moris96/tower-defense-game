@@ -18,6 +18,8 @@ let score = 0;
 const winningScore = 50; 
 let chosenHero = 1;
 
+
+
 //global arrays 
 const gameGrid = [];
 const heroes = [];
@@ -107,10 +109,14 @@ class Lasers {
         this.width = 10
         this.height = 20
         this.power = 20 
-        this.speed = 5
+        this.speed = 17
+        this.sound = new Audio()
+        this.sound.src = 'sounds/laser.mp3'
     }
     update(){
         this.x += this.speed
+        this.sound.play();
+        this.sound.volume = 0.3
     }
     draw(){
         ctx.fillStyle = '#00fff7'
