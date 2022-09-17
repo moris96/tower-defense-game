@@ -352,8 +352,8 @@ function handleWeakVillians(){
         }
         if(weakVillians[i].health <= 0){
             let gainedResources = weakVillians[i].maxHealth/10;
-            floatingMessages.push(new floatingMessage('+' + gainedResources, weakVillians[i].x, weakVillians[i].y, 30, 'black'))
-            floatingMessages.push(new floatingMessage('+' + gainedResources, 250, 50, 30, 'black'))
+            floatingMessages.push(new floatingMessage('+' + gainedResources, weakVillians[i].x, weakVillians[i].y, 30, '#57f542'))
+            floatingMessages.push(new floatingMessage('+' + gainedResources, 250, 50, 30, '#57f542'))
             numberMoney += gainedResources;
             score += gainedResources;
             const findThisIndex = weakVillianPositions.indexOf(weakVillians[i].y);
@@ -439,7 +439,7 @@ function handleMoney(){
 
 //utilities && event listener vars
 const levelTwoBtn = document.getElementById('level-2');
-levelTwoBtn.addEventListener('click', changeLevel);
+levelTwoBtn.addEventListener('click', changeLevel());
 
 const tryAgainBtn = document.getElementById('try-again');
 tryAgainBtn.addEventListener('click', tryAgain);
@@ -473,9 +473,9 @@ function handleGameStatus(){
         ctx.fillText('Level 1 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-        changeLevel();
+        // changeLevel();
     }
-    // if(score===winningScore){
+    // if(weakVillians.length === 0){
     //     changeLevel();
     // }
 }

@@ -425,7 +425,7 @@ function handleMoney(){
 
 //utilities && event listener vars
 const levelBossBtn = document.getElementById('final-boss');
-levelBossBtn.addEventListener('click', changeLevel);
+levelBossBtn.addEventListener('click', changeLevel());
 
 const tryAgainBtn = document.getElementById('try-again');
 tryAgainBtn.addEventListener('click', tryAgain);
@@ -461,7 +461,7 @@ function handleGameStatus(){
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
         changeLevel();
     }
-    // if(score===winningScore){
+    // if(weakVillians.length===0){
     //     changeLevel();
     // }
 }

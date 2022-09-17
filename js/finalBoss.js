@@ -432,8 +432,16 @@ function handleMoney(){
 
 
 //utilities && event listener vars
+const rewardsBtn = document.getElementById('reward');
+rewardsBtn.addEventListener('click', claimReward());
+
 const tryAgainBtn = document.getElementById('try-again');
 tryAgainBtn.addEventListener('click', tryAgain);
+
+function claimReward(){
+    document.getElementById('reward').innerHTML = `
+    <button onclick="location.href='https://acegif.com/wp-content/uploads/gifs/raining-money-27.gif'">Claim Reward</button>`
+}
 
 function tryAgain(){
     document.getElementById('try-again').innerHTML = `
@@ -459,7 +467,11 @@ function handleGameStatus(){
         ctx.fillText('You are the champion!', 50, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
+        // claimReward();
     }
+    // if(weakVillians.length===0){
+    //     claimReward();
+    // }
 }
 
 
