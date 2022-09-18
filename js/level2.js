@@ -434,10 +434,10 @@ levelBossBtn.addEventListener('click', changeLevel());
 const tryAgainBtn = document.getElementById('try-again');
 tryAgainBtn.addEventListener('click', tryAgain);
 
-function changeLevel(){
-    document.getElementById('final-boss').innerHTML = `
-    <button type="button" onclick="location.href='final_boss.html'">Final Boss</button>`
-}
+// function changeLevel(){
+//     document.getElementById('final-boss').innerHTML = `
+//     <button type="button" onclick="location.href='final_boss.html'">Final Boss</button>`
+// }
 
 function tryAgain(){
     document.getElementById('try-again').innerHTML = `
@@ -463,7 +463,7 @@ function handleGameStatus(){
         ctx.fillText('Level 2 complete!', 130, 300)
         ctx.font = '30px Blade Runner Movie Font'
         ctx.fillText('You win with: ' + score + ' ' + 'points!', 134, 340) 
-        changeLevel();
+        // changeLevel();
     }
     // if(weakVillians.length===0){
     //     changeLevel();
