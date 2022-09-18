@@ -16,6 +16,14 @@
         <button type="button" onclick="location.href='final_boss.html'">Final Boss</button>
         <button id="final-boss"></button>
     </div>
+    <p>click to play sound</p>
+    <audio id="volume" controls autoplay>
+        <source src="sounds/drLivesy.mp3" type="audio/mp3">
+    </audio>
+    <script>
+        var volume = document.getElementById('volume');
+        volume.volume = 0.2
+    </script>
     
     <canvas id="canvas"></canvas>
 </body>

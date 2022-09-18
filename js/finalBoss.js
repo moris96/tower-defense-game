@@ -444,7 +444,7 @@ tryAgainBtn.addEventListener('click', tryAgain);
 
 function claimReward(){
     document.getElementById('reward').innerHTML = `
-    <button onclick="location.href='https://acegif.com/wp-content/uploads/gifs/raining-money-27.gif'">Claim Reward</button>`
+    <button onclick="location.href='reward.html'">Claim Reward</button>`
 }
 
 function tryAgain(){
