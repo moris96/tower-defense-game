@@ -1,7 +1,5 @@
 @import url('http://fonts.cdnfonts.com/css/blade-runner-movie-font');
 
-/* #EB7803 */
-
 body {
     background-color: black;
     font-family: 'Blade Runner Movie Font', sans-serif;
@@ -116,6 +114,18 @@ h1:hover {
     margin: auto;
     min-width: 50%;
     min-height: 50%;
+}
+
+#rules {
+    color: white;
+}
+
+#tutorials {
+    color: white;
+}
+
+h5 {
+    text-align: right;
 }
 
 #canvas {
