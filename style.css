@@ -14,24 +14,28 @@ button {
 #level-2 {
     background-color: #EB7803;
     border: none;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 #try-again {
     background-color: #EB7803;
     border: none;
     color: #EB7803;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 #final-boss {
     background-color: #EB7803;
     border: none;
     color: #EB7803;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 #reward {
     background-color: #EB7803;
     border: none;
     color: #EB7803;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 .frame {
@@ -41,10 +45,9 @@ button {
     margin: auto;
     text-align: center;
     border: 1px solid transparent;
-
     box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
-
     position: relative; top: -5rem;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 h1 {
@@ -54,6 +57,7 @@ h1 {
     margin: auto;
     position: relative; top: 80px;
     font-size: 50px;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 .button {
@@ -70,10 +74,16 @@ h1 {
     color: black;
     font-family: 'Blade Runner Movie Font', sans-serif;
     font-size: 16px;
+    font-family: 'Blade Runner Movie Font', sans-serif;
+}
+
+.button:hover {
+    text-shadow: 2px 4px 0px #57f542;
 }
 
 .btn-group {
     margin-top: 80px;
+    font-family: 'Blade Runner Movie Font', sans-serif;
 }
 
 #canvas {
