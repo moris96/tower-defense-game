@@ -1,14 +1,29 @@
-# this is project 1
+# Tower Defense: Soldiers vs Meme Zombies!
 
-### ideas for game:
-* tower defense 
+### Tutorial and Rules:
+1. You must kill all enemies to win each level!
+2. If a single enemy breaks through your defenses, you lose!
+3. Each hero costs 100 money to train, so train wisely!
+4. On top left side of canvas you can click to choose a hero to play as.
+5. Click anywhere on canvas to place hero. 
 
-#### rules: 
-* each time you kill a villian, your score increases by 10 
-* if a single villian breaks through your defenses you lose! 
-* to win you need to defend against 3 rounds of villians, including a final boss in round 3! 
-* in each level your laser's power and starting money increases, but enemies become more difficult to kill! 
-* points needed to win: 
-    * level 1: >= 20
-    * level 2: >= 50
-    * level 3 (final boss): >= 500  
+---
+
+#### Programming Languages Used: 
+* JavaScript
+* HTML 
+* CSS 
+
+---
+Link to game: [Click here](https://moris96.github.io/tower-defense-game/index.html)
+
+---
+
+#### 
+Other Notes: 
+* This game was programmed heavy on OOP (object oriented program) to demonstrate the powerful capabilities of JavaScript. Most of the code is used in JavaScript since I used the html canvas tag (which is popular with browser games)
+* Challanges: 
+    * Styling & CSS. My current weakness as of September 18, 2022 is visual art & styling a web page to make it look nice and artistic. I am a backend person and my strength is in JavaScript (the brains of the project)
+* This game was designed to be both challenging and funny. Have fun playing!
+
+---
