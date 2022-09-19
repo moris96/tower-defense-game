@@ -5,7 +5,8 @@
 2. If a single enemy breaks through your defenses, you lose!
 3. Each hero costs 100 money to train, so train wisely!
 4. On top left side of canvas you can click to choose a hero to play as.
-5. Click anywhere on canvas to place hero. 
+5. Money will randomly appear on canvas at random intervals. Hover over them to get it! 
+6. Click anywhere on canvas to place hero. 
 
 ---
 
