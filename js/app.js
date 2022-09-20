@@ -1,4 +1,4 @@
-console.log('js connected');
+// console.log('js connected');
 //reminder: normal functions are constructors ; arrow functions are only callable 
 
 //canvas 
@@ -320,7 +320,7 @@ class WeaksV {
         this.y = verticalPosition
         this.width = cellSize - cellGap * 2
         this.height = cellSize - cellGap * 2
-        this.speed = Math.random() * 0.2 + 0.8 //change to 0.8 later once everything work 
+        this.speed = Math.random() * 0.2 + 0.3 //change to 0.8 later once everything work 
         this.movement = this.speed
         this.health = 100
         this.maxHealth = this.health
